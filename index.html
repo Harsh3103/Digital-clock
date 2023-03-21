@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Digital Clock</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="clock.js"></script>
+
+  </head>
+  <body onload="Clock()">
+    <h1 class="Digital"><u>Digital Clock & Timer</u></h1>
+
+  
+    <div class="datetime">
+      <div class="date">
+        <span id="dayname">Day</span>,
+        <span id="month">Month</span>
+        <span id="daynum">00</span>,
+        <span id="year">Year</span>
+      </div>
+      <div class="time">
+        <span id="hour">00</span>:
+        <span id="minutes">00</span>:
+        <span id="seconds">00</span>
+        <span id="period">AM</span>
+      </div>
+      <!--digital clock end-->
+       <!--Timer Starts-->
+      <div class="second">
+        <label for="time">Enter time in seconds:</label>
+        <input type="number" id="time" name="time" min="1" required>
+      </div>
+      <div id="timer">00:00:00</div>
+      <div id="buttons">
+        <button id="start">Start</button>
+        <button id="stop" onclick="startConfetti();">Stop</button>
+        <button id="reset">Reset</button>
+      </div>
+    </div>
+  <!--Timer end-->
+   
+   
+   
+<script>
+  //Timer Script
+const timeInput = document.getElementById("time");
+const timer = document.getElementById("timer");
+const startButton = document.getElementById("start");
+const stopButton = document.getElementById("stop");
+const resetButton = document.getElementById("reset");
+
+let intervalId;
+let startTime;
+let remainingTimeInSeconds;
+
+startButton.addEventListener("click", startTimer);
+stopButton.addEventListener("click", stopTimer);
+resetButton.addEventListener("click", resetTimer);
+//Timer Start
+function startTimer() {
+  const totalTimeInSeconds = parseInt(timeInput.value);
+  if (totalTimeInSeconds <= 0) {
+    alert("Please enter a valid time in seconds.");
+    return;
+  }
+  remainingTimeInSeconds = totalTimeInSeconds;
+  startTime = Date.now();
+  intervalId = setInterval(() => {
+    remainingTimeInSeconds--;
+    if (remainingTimeInSeconds <= 0) {
+      clearInterval(intervalId);
+      timer.innerHTML = "00:00:00";
+      startButton.disabled = false;
+      
+      return;
+    }
+    const hours = Math.floor(remainingTimeInSeconds / 3600);
+    const minutes = Math.floor((remainingTimeInSeconds % 3600) / 60);
+    const seconds = remainingTimeInSeconds % 60;
+    const formattedTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    timer.innerHTML = formattedTime;
+  }, 1000);
+  startButton.disabled = true;
+}
+//Timer Stop
+function stopTimer() {
+  clearInterval(intervalId);
+  remainingTimeInSeconds -= Math.floor((Date.now() - startTime) / 1000);
+  startButton.disabled = false;
+  
+}
+//Timer Reset
+function resetTimer() {
+  clearInterval(intervalId);
+  timer.innerHTML = "00:00:00";
+  startButton.disabled = false;
+  timeInput.value = "";
+}
+//it will add 0 if value is less then in 00:00:00
+function pad(number) {
+  return number < 10 ? "0" + number : number;
+}
+    </script>
+
+   
+  </body>
+</html>
